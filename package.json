@@ -1,6 +1,6 @@
 {
   "name": "node-pkcs10",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Generate a PKCS#10 CSR from node-native public and private key.  Only dependency is crypto module that comes with node.",
   "main": "./lib/csr.js",
   "directories": {
