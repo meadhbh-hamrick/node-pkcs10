@@ -15,6 +15,10 @@
     "CSR",
     "Certificate Request"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meadhbh-hamrick/node-pkcs10"
+  },
   "author": "Meadhbh Hamrick <OhMeadhbh@gmail.com>",
   "license": "BSD-3-Clause"
 }
