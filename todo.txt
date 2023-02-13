@@ -1,0 +1,25 @@
+Things To Do:
+
+++---------++------------------------------------------------------------------++
+|| Task ID || Description                                                      ||
+++---------++------------------------------------------------------------------++
+|| CSR-001 || Improve Test scripts.                                            ||
+||         ||                                                                  ||
+||         || To test the system while developing, I used what became the      ||
+||         || ./example.js script.  I want to add better tests in the test/    ||
+||         || directory.                                                       ||
+++---------++------------------------------------------------------------------++
+|| CSR-002 || Add ECC Support.                                                 ||
+||         ||                                                                  ||
+||         || Node.js already supports ECDSA and the specs for generating an   ||
+||         || ECC CSR are sort of out there (SECG, RFC5480, etc.)  But I need  ||
+||         || to do a bit more research in what real-world ECC CSRs look like. ||
+++---------++------------------------------------------------------------------++
+|| CSR-003 || Add Attribute Support.                                           ||
+||         ||                                                                  ||
+||         || I think most CAs and RAs just use the CSR to get the subject     ||
+||         || name and the public key and ignore anything else.  But... The    ||
+||         || spec says you can add attributes to the CSR, and I'm sure        ||
+||         || someone out there wants to be able to add a SAN to the cert      ||
+||         || request.                                                         ||
+++---------++------------------------------------------------------------------++

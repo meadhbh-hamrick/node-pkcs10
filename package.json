@@ -1,0 +1,20 @@
+{
+  "name": "node-pkcs10",
+  "version": "0.2.2",
+  "description": "Generate a PKCS#10 CSR from node-native public and private key.  Only dependency is crypto module that comes with node.",
+  "main": "./lib/csr.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "keywords": [
+    "PKCS#10",
+    "CSR",
+    "Certificate Request"
+  ],
+  "author": "Meadhbh Hamrick <OhMeadhbh@gmail.com>",
+  "license": "BSD-3-Clause"
+}
