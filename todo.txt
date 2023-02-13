@@ -16,14 +16,45 @@ Valid Statuses: PROPOSED -> BACKLOG -> CURRENT -> DONE, OBE
 ||         ||         || To test the system while developing, I used what      ||
 ||         ||         || became the ./example.js script.  I want to add better ||
 ||         ||         || tests in the test/ directory.                         ||
-++---------++------------------------------------------------------------------++
-|| CSR-002 || BACKLOG || Add ECC Support.                                      ||
+++---------++---------++-------------------------------------------------------++
+|| CSR-002 || BACKLOG || Add Suite-B / ECDSA Support.                          ||
 ||         ||         ||                                                       ||
 ||         ||         || Node.js already supports ECDSA and the specs for      ||
 ||         ||         || generating an ECC CSR are out there (SECG, RFC5480,   ||
 ||         ||         || etc.)  But I need to do a bit more research in what   ||
 ||         ||         || real-world ECC CSRs look like.                        ||
-++---------++------------------------------------------------------------------++
+||         ||         ||                                                       ||
+||         ||         || There are a lot of curves out there.  This task is    ||
+||         ||         || only to add support for two Suite-B ECDSA curves:     ||
+||         ||         || "prime256v1" and "secp384r1".                         ||
+||         ||         ||                                                       ||
+||         ||         || The API shouldn't change.  We should pick up the ECC  ||
+||         ||         || key type by examining the private key passed to the   ||
+||         ||         || constructor.  Something like:                         ||
+||         ||         ||                                                       ||
+||         ||         || let _pair =                                           ||
+||         ||         ||   crypto.generateKeyPairSync( "ec", {                 ||
+||         ||         ||     "namedCurve": "prime256v1"                        ||
+||         ||         ||   } )                                                 ||
+||         ||         || ;                                                     ||
+||         ||         ||                                                       ||
+||         ||         || let _csr =                                            ||
+||         ||         ||   new CSR( {                                          ||
+||         ||         ||     "privateKey": _pair.privateKey,                   ||
+||         ||         ||     "publicKey": _pair.publicKey,                     ||
+||         ||         ||     "subjectName": "/C=US/ST=Confusion/CN=whatever"   ||
+||         ||         ||   } )                                                 ||
+||         ||         || ;                                                     ||
+||         ||         ||                                                       ||
+||         ||         || The same approach should work for ED25519 and DSA,    ||
+||         ||         || but those are out of the scope of this item.          ||
+||         ||         ||                                                       ||
+||         ||         || Tests should include something to make sure we're     ||
+||         ||         || generating Suite-B CSRs correctly.  Unless the folks  ||
+||         ||         || at NIST/NSA tell me differently, I'll use OIDs from   ||
+||         ||         || RFC5759 Section 3.2.                                  ||
+||         ||         ||                                                       ||
+++---------++---------++-------------------------------------------------------++
 || CSR-003 || BACKLOG || Add Attribute Support.                                ||
 ||         ||         ||                                                       ||
 ||         ||         || I think most CAs and RAs just use the CSR to get the  ||
@@ -31,20 +62,30 @@ Valid Statuses: PROPOSED -> BACKLOG -> CURRENT -> DONE, OBE
 ||         ||         || else.  But... The spec says you can add attributes to ||
 ||         ||         || the CSR, and I'm sure someone out there wants to be   ||
 ||         ||         || able to add a SAN to the cert request.                ||
-++---------++------------------------------------------------------------------++
+||         ||         ||                                                       ||
+||         ||         || API might look something like:                        ||
+||         ||         ||                                                       ||
+||         ||         || _csr                                                  ||
+||         ||         ||   .addAttribute( "san", "www.example.net" )           ||
+||         ||         ||   .addAttribute( "san", "www.example.org" )           ||
+||         ||         ||   .addAttribute( "keyUsage", [                        ||
+||         ||         ||     "keyEncipherment", "dataEncipherment" ] )         ||
+||         ||         ||   .addAttribute( "extKeyUsage", [ "serverAuth" ] )    ||
+||         ||         || ;                                                     ||
+++---------++---------++-------------------------------------------------------++
 || CSR-004 || CURRENT || API Additions.                                        ||
 ||         ||         ||                                                       ||
-||         ||         || Adding setSubjectName(), setAttribute(), saveCSP(),   ||
+||         ||         || Adding setSubjectName(), setAttribute(), saveCSR(),   ||
 ||         ||         || savePublic() and savePrivate() so you can do this:    ||
 ||         ||         ||                                                       ||
 ||         ||         || let _csr =                                            ||
 ||         ||         ||   new CSR(                                            ||
-||         ||         ||     crypto.generateKeyPairSync( {                     ||
+||         ||         ||     crypto.generateKeyPairSync( "rsa", {              ||
 ||         ||         ||       modulusLength: 3144,                            ||
 ||         ||         ||       publicExponent: 0x10001                         ||
 ||         ||         ||     } ) )                                             ||
 ||         ||         ||     .setSubjectName( "/C=US/L=Anytown/CN=whatever" )  ||
-||         ||         ||     .savePrivate( "whatever.key.pem" )                ||
+||         ||         ||     .savePrivate( "whatever.key.pem", "pem" )         ||
 ||         ||         ||     .toPEM()                                          ||
 ||         ||         || ;                                                     ||
-++---------++------------------------------------------------------------------++
+++---------++---------++-------------------------------------------------------++
